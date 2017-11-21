@@ -1,0 +1,3 @@
+http POST :5000/api/accounts/ type="credit" number="BE3432543534" name="Kir" first_name="Vost" address="Limelette" birthdate="10 december"
+http PATCH :5000/api/accounts/1 type="debit"
+http DELETE :5000/api/accounts/2
