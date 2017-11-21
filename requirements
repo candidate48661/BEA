@@ -1,0 +1,4 @@
+Flask==0.12.2
+Flask-RESTful==0.3.6
+httpie==0.9.9
+geopy=1.11.0
