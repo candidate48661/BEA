@@ -71,9 +71,40 @@ class Database:
         self.connection.commit()
         self.connection.close()
 
+    def init_dummy_db(self):
+        self.connection = sqlite3.connect(self.name)
+        self.cursor = self.connection.cursor()
+        self.cursor.execute("INSERT INTO accounts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", ("Credit",
+                                                                                           "BE 1234 5678 9876 5432",
+                                                                                           "John",
+                                                                                           "Smith",
+                                                                                           "Limelette",
+                                                                                           "12/02/1968",
+                                                                                           None,
+                                                                                           None))
+        self.cursor.execute("INSERT INTO accounts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", ("Credit",
+                                                                                           "BE 5844 3021 3235 9473",
+                                                                                           "Mike",
+                                                                                           "Wood",
+                                                                                           "Genval",
+                                                                                           "16/04/1977",
+                                                                                           None,
+                                                                                           None))
+        self.cursor.execute("INSERT INTO accounts VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", ("Credit",
+                                                                                           "BE 1456 9826 1074 0275",
+                                                                                           "Sam",
+                                                                                           "Simpson",
+                                                                                           "Leuven",
+                                                                                           "28/06/1991",
+                                                                                           None,
+                                                                                           None))
+        self.connection.commit()
+        self.connection.close()
+
 
 def dict_factory(cursor, row):
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
+

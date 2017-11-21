@@ -109,6 +109,11 @@ class AccountList(Resource):
         return account, status.HTTP_201_CREATED
 
 db = Database("accounts.db")
+#just to have some initial values to play with from the very begining in case if you don't have db already
+if db.get_max_id() == 0:
+    db.init_dummy_db()
+# comment 2 lines above in case if you don't want to initialize database with dummy data
+
 geolocator=Nominatim()
 app = Flask(__name__)
 api = Api(app)
