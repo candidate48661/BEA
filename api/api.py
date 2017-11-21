@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_restful import abort, fields, marshal_with, reqparse, Resource, Api
+from geopy import Nominatim
 from models import AccountModel
 from database import Database
 import status
@@ -58,6 +59,13 @@ class Account(Resource):
             account.first_name = args['first_name']
         if 'address' in args and args['address'] != None:
             account.address = args['address']
+            location = geolocator.geocode(args['address'])
+            if location != None:
+                account.latitude = location.latitude
+                account.longitude = location.longitude
+            else:
+                account.latitude = None;
+                account.longitude = None;
         if 'birthdate' in args and args['birthdate'] != None:
             account.birthdate = args['birthdate']
         db.put(id, account.type, account.number, account.name, account.first_name, account.address, account.birthdate,
@@ -69,7 +77,6 @@ class AccountList(Resource):
     @marshal_with(account_fields)
     def get(self):
         return [v for v in db.view()]
-        #return [v for v in account_manager.accounts.values()]
 
     @marshal_with(account_fields)
     def post(self):
@@ -90,11 +97,19 @@ class AccountList(Resource):
             birthdate = args['birthdate'],
             )
         account.id = db.get_max_id()+1
+        location = geolocator.geocode(account.address)
+        if location != None:
+            account.latitude = location.latitude
+            account.longitude = location.longitude
+        else:
+            account.latitude = None;
+            account.longitude = None;
         db.post(account.type, account.number, account.name, account.first_name, account.address, account.birthdate,
                 account.latitude, account.longitude)
         return account, status.HTTP_201_CREATED
 
 db = Database("accounts.db")
+geolocator=Nominatim()
 app = Flask(__name__)
 api = Api(app)
 api.add_resource(AccountList, '/api/accounts/')
