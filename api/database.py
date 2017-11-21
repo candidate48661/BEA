@@ -21,9 +21,9 @@ class Database:
         self.cursor.execute("SELECT * FROM accounts ORDER BY id DESC LIMIT 1")
         rows = self.cursor.fetchall()
         self.connection.close()
+        if len(rows) == 0:
+            return 0
         return int(rows[0]["id"])
-
-
 
     def post(self, account_type, number, name, first_name, address, birthdate, latitude, longitude):
         self.connection = sqlite3.connect(self.name)
