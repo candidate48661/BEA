@@ -22,4 +22,17 @@ class MessageManager():
     def delete_message(self, id):
         del self.messages[id]
 
-    
+
+#data we want to render to messageModel class (JSON representation)
+message_fields = {
+    'id': fields.Integer,
+    'uri': fields.Url('message_endpoint'),
+    'message': fields.String,
+    'duration': fields.Integer,
+    'creation_date': fields.DateTime,
+    'message_category': fields.String,
+    'printed_times': fields.Integer,
+    'printed_once': fields.Boolean
+}
+
+message_manager = MessageManager()
