@@ -13,3 +13,6 @@ Database contains following information
 
 ## Requirements:
 - Python 3.5.2
+- Flask 0.12.2
+- Flask-RESTful 0.3.6
+
