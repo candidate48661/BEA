@@ -11,14 +11,16 @@ Database contains following information
 - Client's data of birth
 - Adress coordinate (Latitude and longitude). None if it can't be found (create/update)
 
-## install
+## Install
 
 ```
 pip install -r requirements.txt
 ```
 
-## run
+## Run
 
 ```
 python api.py
 ```
+
+then go to http://127.0.0.1:5000/accounts/
