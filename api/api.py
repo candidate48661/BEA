@@ -1,27 +1,8 @@
 from flask import Flask
 from flask_restful import abort, fields, marshal_with, reqparse, Resource, Api
-from datetime import datetime as dt
-from pytz import utc
 from models import AccountModel
+from database import Database
 import status
-
-
-class AccountManager():
-    last_id = 0;
-
-    def __init__(self):
-        self.accounts = {}
-
-    def insert_account(self, account):
-        self.__class__.last_id += 1
-        account.id = self.__class__.last_id
-        self.accounts[self.__class__.last_id] = account
-
-    def get_account(self, id):
-        return self.accounts[id]
-
-    def delete_account(self, id):
-        del self.accounts[id]
 
 #data we want to render to messageModel class (JSON representation)
 account_fields = {
@@ -37,12 +18,9 @@ account_fields = {
     'latitude': fields.Float,
 }
 
-account_manager = AccountManager()
-
-
 class Account(Resource):
     def abort_if_account_doesnt_exist(self, id):
-        if id not in account_manager.accounts:
+        if len(db.get(id)) == 0:
             abort(
                 status.HTTP_404_NOT_FOUND,
                 message="Account {0} doesn't exist".format(id))
@@ -50,17 +28,18 @@ class Account(Resource):
     @marshal_with(account_fields)
     def get(self, id):
         self.abort_if_account_doesnt_exist(id)
-        return account_manager.get_account(id)
+        return db.get(id)
 
     def delete(self, id):
         self.abort_if_account_doesnt_exist(id)
-        account_manager.delete_account(id)
+        db.delete(id)
         return '', status.HTTP_204_NO_CONTENT
 
     @marshal_with(account_fields)
-    def patch(self, id):
+    def put(self, id):
         self.abort_if_account_doesnt_exist(id)
-        account = account_manager.get_account(id)
+        account = AccountModel.fromData(db.get(id))
+        print(account.name)
         parser = reqparse.RequestParser()
         parser.add_argument('type', type=str)
         parser.add_argument('number', type=str)
@@ -69,7 +48,6 @@ class Account(Resource):
         parser.add_argument('address', type=str)
         parser.add_argument('birthdate', type=str)
         args = parser.parse_args()
-        print (args)
         if 'type' in args and args['type'] != None:
             account.type = args['type']
         if 'number' in args and args['number'] != None:
@@ -82,13 +60,16 @@ class Account(Resource):
             account.address = args['address']
         if 'birthdate' in args and args['birthdate'] != None:
             account.birthdate = args['birthdate']
+        db.put(id, account.type, account.number, account.name, account.first_name, account.address, account.birthdate,
+               account.latitude, account.longitude)
         return account
 
 
 class AccountList(Resource):
     @marshal_with(account_fields)
     def get(self):
-        return [v for v in account_manager.accounts.values()]
+        return [v for v in db.view()]
+        #return [v for v in account_manager.accounts.values()]
 
     @marshal_with(account_fields)
     def post(self):
@@ -108,9 +89,12 @@ class AccountList(Resource):
             address = args['address'],
             birthdate = args['birthdate'],
             )
-        account_manager.insert_account(account)
+        account.id = db.get_max_id()+1
+        db.post(account.type, account.number, account.name, account.first_name, account.address, account.birthdate,
+                account.latitude, account.longitude)
         return account, status.HTTP_201_CREATED
 
+db = Database("accounts.db")
 app = Flask(__name__)
 api = Api(app)
 api.add_resource(AccountList, '/api/accounts/')
