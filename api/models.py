@@ -1,5 +1,3 @@
-import json
-
 class AccountModel:
     def __init__(self, account_type, account_number, name, first_name, address, birthdate):
         # We will automatically generate the new id
@@ -11,8 +9,8 @@ class AccountModel:
         self.address = address
         self.birthdate = birthdate
         #We will automatically generate next 2 parameters based on client address.
-        self.longitude = 0
-        self.latitude = 0
+        self.longitude = None
+        self.latitude = None
 
     @classmethod
     def fromData(self, entries):
