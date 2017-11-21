@@ -1,1 +1,3 @@
 http POST :5000/api/messages/ message="Hello World!" duration=1 message_category="Information"
+http PATCH :5000/api/messages/1 printed_once=true printed_times=1
+http DELETE :5000/api/messages/2
