@@ -15,4 +15,5 @@ Database contains following information
 - Python 3.5.2
 - Flask 0.12.2
 - Flask-RESTful 0.3.6
+- HTTPie 0.9.9
 
