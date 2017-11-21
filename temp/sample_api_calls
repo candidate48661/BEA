@@ -1,0 +1,1 @@
+http POST :5000/api/messages/ message="Hello World!" duration=1 message_category="Information"
