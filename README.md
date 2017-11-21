@@ -11,10 +11,14 @@ Database contains following information
 - Client's data of birth
 - Adress coordinate (Latitude and longitude). None if it can't be found (create/update)
 
-## Requirements:
-- Python 3.5.2
-- Flask 0.12.2
-- Flask-RESTful 0.3.6
-- HTTPie 0.9.9
-- SQLAchemy 1.1.15
+## install
 
+```
+pip install -r requirements.txt
+```
+
+## run
+
+```
+python api.py
+```
