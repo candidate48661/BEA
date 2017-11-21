@@ -21,4 +21,6 @@ Database contains following information
 - marshmallow 2.14.0
 - marshmallow-alchemy 0.13.2
 - HTTPie 0.9.9
+- Psycopg2 2.6.1
+- SQLAchemy 1.1.15
 
